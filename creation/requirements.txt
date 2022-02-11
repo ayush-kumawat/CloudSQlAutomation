@@ -1,0 +1,5 @@
+requests
+google.auth
+flask
+google-api-python-client>=1.7.8
+google-auth

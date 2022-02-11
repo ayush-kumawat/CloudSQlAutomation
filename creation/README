@@ -1,0 +1,33 @@
+####CODE EXPLAINATION####
+
+Automation process starts from monitoring of read replicas utilization,
+once the utilization reaches above threshhold value the AlertPolicy throws alert to Cloud Pub/Sub.
+
+Cloud Run will be triggered using EVENTARC TRIGGER from Cloud Pub/SUb.
+- Trigger is configured to run the function /create written in code.
+
+First the Code checks the recieved message and acknowledge the Pub/Sub.
+If there is no message it retuen 400 error response
+
+To ensure the Cloud Run is only triggered when the alert polict status is on, if condition is set.
+```[if msg["incident"]["state"] == 'open']```
+
+api for creating an SQL instance is called and arguments required are passed.
+    ```name = MY_INSTANCE + "-replica-" + datetime.datetime.now().strftime("%y-%m-%d-%H-%M")```
+
+name for replica created using master name with keywork replica and present data and time.
+instance details are passed in headers which include machine type and flags to be passed and all other details rquired.
+
+After the api call GCP will start creating the instance and it'll take around 10-15 mins.
+during this period the code will continiously poll and check wheather the instance is in RUNNABLE state.
+
+polling is done with help of another function defined in code.
+
+Once the state is RUNNABLE, instance gets it's IP Address. This ip address is passed to the url of webhook
+
+Webhooks running on the prosysql VMs will recieve the hook request and run the prxysql scripts which will add the instance to recieve traffic.
+ALong with proxysql webhook for Percona is added.
+
+####TROUBELSHOOTING#####
+
+In case of errors in clud run and code keeps on running the issue might be because the pub cub didn't recieved the ack signal, to stop purge all the messages of the respective subscription. and try catch the eror from the logs.
