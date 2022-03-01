@@ -6,5 +6,3 @@ Alert sends message to Cloud Pub/sub and it triggers the CLOUDRUN.
 FIRST ---> DELETE details from percona and proxysql
 SECOND ---> Call delete function 
 THIRD ----> DELETE function call api with the instance name which is collected by getting the list of replics and choosing the top from list.
-
-refer to ../production-classplus-sql-automation/README for complete details.
