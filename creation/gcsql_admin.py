@@ -251,7 +251,7 @@ class Instances:
         if database_type == "MySQL":
             request_body["databaseVersion"] = "MYSQL_5_7"
             # request_body["settings"] = {"tier": "db-n1-standard-1"}
-            request_body["masterInstanceName"]= "harshal-test-classplus"
+            request_body["masterInstanceName"]= "MASTER_INSTANCE_NAME"
             request_body["settings"] = {"userLabels": {"owner": "sql", "read-replica": "true"}}
             request_body["region"] = "us-east1"
         elif database_type == "PostgreSQL":
